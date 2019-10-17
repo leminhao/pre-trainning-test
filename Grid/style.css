@@ -1,0 +1,21 @@
+.snake-board table {
+    border-collapse: collapse;
+}
+ 
+.snake-board td {
+    width: 20px;
+    height: 20px;
+    border: 0;
+}
+ 
+.snake-board .col {
+    background-color: yellow;
+}
+
+.snake-board .snake {
+    background-color: blue;
+}
+ 
+.snake-board .fruit {
+    background-color: red;
+}

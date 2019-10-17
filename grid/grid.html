@@ -1,0 +1,114 @@
+<html lang="en">
+    </head>
+    <style>
+    
+        html, body {
+            margin: 0;
+            display: block;
+        }
+    
+        button {
+            height: 1.5cm;
+            width: 1.5cm;
+    
+        }
+        #display{
+            position: fixed;
+            top: 3cm;
+            left: 7cm;
+        }
+        ul li {
+            list-style: none;
+        }
+    
+        ul {
+            height: 1cm;
+        }
+    </style>
+    <body>
+    <form>
+        <input id="row" type="text" placeholder="Input Row">
+        <input id="col" type="text" placeholder="Input Column">
+        <button class="submit" style="height: 0.5cm">Print</button>
+    </form>
+    <div id="display">
+    
+    </div>
+    </body>
+    <script>
+        const row = document.querySelector("#row");
+        const col = document.querySelector("#col");
+        const btn = document.querySelector(".submit");
+        var listBTN;
+        console.log(row.value, col.value);
+        let array = [];
+        const table = document.querySelector("#display");
+    
+        function displayTable(e) {
+            e.preventDefault();
+            var n = parseInt(row.value.toString());
+    
+            var m = parseInt(col.value.toString());
+            console.log(n, m);
+            for (let i = 0; i < n; i++) {
+                let tmp = [];
+                let list_tmp = `<div><ul><li>`;
+                for (let j = 0; j < m; j++) {
+                    let value = 0;
+                    if (i == 0) {
+                        value = j;
+                    } else {
+                        value = Math.floor(Math.random() * 1001);
+                    }
+                    tmp.push(value);
+                    list_tmp += `<button class="btn" data-col ="${j}" data-row ="${i}">${value}</button>`
+                }
+                list_tmp += `</li></ul></div>`;
+                table.innerHTML += list_tmp;
+                array.push(tmp);
+            }
+            listBTN = document.querySelectorAll(".btn");
+        }
+        // document.addEventListener("")
+    
+        function sort() {
+            var index = this.dataset.col;
+            var indexrow = this.dataset.row;
+            if (indexrow == 0){
+                console.log(index);
+                for (let u = 1;u<array.length;u++){
+                    for (let v = u+1;v<array.length;v++){
+                        if (array[u][index] > array[v][index]){
+                            let tmp = array[u];
+                            array[u] = array[v];
+                            array[v] = tmp;
+                        }
+                    }
+                }
+    
+                table.innerHTML = ``;
+                for (let i = 0; i < array.length; i++) {
+                    let tmp = [];
+    
+                    let list_tmp = `<div class="index"><ul><li>`;
+                    for (let j = 0; j < array[i].length; j++) {
+                        list_tmp += `<button class="btn" data-col ="${j}" data-row ="${i}">${array[i][j]}</button>`
+                    }
+                    list_tmp += `</li></ul></div>`;
+                    table.innerHTML += list_tmp;
+                }
+                listBTN = document.querySelectorAll(".btn");
+            }
+        }
+        // table.addEventListener('click',sort);
+        btn.addEventListener('click', displayTable);
+        setInterval(() => {
+          //  console.log(listBTN);
+            if (listBTN !== undefined) {
+                listBTN.forEach(btn => btn.addEventListener('click', sort));
+            }
+        }, 0.1);
+    
+    </script>
+    
+    </html>

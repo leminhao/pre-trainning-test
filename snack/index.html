@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>SNACK</title>
+<style>
+  html, body {
+    height: 100%;
+    margin: 0;
+  }
+  body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  canvas {
+    background-color: aquamarine;
+    border: 1px solid white;
+  }
+  </style>
+</head>
+<body>
+<canvas width="400" height="400" id="game"></canvas>
+<script>
+ //tao khung game
+var canvas = document.getElementById('game');
+var context = canvas.getContext('2d');
+var grid = 20;//20 x 20 o vuong
+// khoi tao ran
+var snake = {
+  x: 200, //vi tri theo huong di chuyen x,y
+  y: 200,
+  dx: grid, //huong di chuyen 
+  dy: 0,      
+  cells: [],
+  maxCells:1
+
+};
+var count = 0;
+var apple = {
+  x: 320,
+  y: 320
+  
+};
+function getRandomInt(min, max) {
+  return Math.floor(Math.random() * (max - min)) + min;
+}
+// game loop
+function loop() {
+//set thoi gian loop
+  requestAnimationFrame(loop);
+  // thoi gian loop hanh dong tu 1s  = 60 - 60/60 = 60fps =1s
+  if (++count < 60) {
+    return;
+  }
+  count = 0;
+  context.clearRect(0,0,canvas.width,canvas.height);
+  snake.x += snake.dx; // do dai ran ++
+  snake.y += snake.dy;
+  // khi dung tuong thi quay lai canh doi dien
+  if (snake.x < 0) {
+    snake.x = canvas.width - grid;
+  }
+  else if (snake.x >= canvas.width) {
+    snake.x = 0;
+  }
+  if (snake.y < 0) {
+    snake.y = canvas.height - grid;
+  }
+  else if (snake.y >= canvas.height) {
+    snake.y = 0;
+  }
+  // them 1 hoac nhieu phan tu vao dau mang
+  snake.cells.unshift({x: snake.x, y: snake.y});
+  // them 1 o vuong phia truoc + remove 1 cai phia sau move dc.
+  if (snake.cells.length > snake.maxCells) {
+    snake.cells.pop();
+  }
+  // set mau tao
+  context.fillStyle = 'red';
+  context.fillRect(apple.x, apple.y, grid-1, grid-1);
+  // set mau ran
+  context.fillStyle = 'green';
+  snake.cells.forEach(function(cell, index) {
+    context.fillRect(cell.x, cell.y, grid-1, grid-1);
+    // ran an tao
+    if (cell.x === apple.x && cell.y === apple.y) {
+      snake.maxCells++;
+      apple.x = getRandomInt(0, 25) * grid;
+      apple.y = getRandomInt(0, 25) * grid;
+    }
+    // check va cham khi dung duoi
+    for (var i = index + 1; i < snake.cells.length; i++) {
+
+      // va cham thi  game over
+      if (cell.x === snake.cells[i].x && cell.y === snake.cells[i].y) {
+        snake.x = 160;
+        snake.y = 160;
+        snake.cells = [];
+        snake.maxCells = 4;
+        snake.dx = grid;
+        snake.dy = 0;
+        apple.x = getRandomInt(0, 25) * grid;
+        apple.y = getRandomInt(0, 25) * grid;
+      }
+    }
+  });
+}
+//bắt sự kiện bàn phím ấn xuống
+document.addEventListener('keydown', function(e) {
+  // lọc sự kiện keydown để rắn không di ngược lại
+  if (e.which === 37 && snake.dx === 0) {
+    snake.dx = -grid;
+    snake.dy = 0;
+  }
+  else if (e.which === 38 && snake.dy === 0) {
+    snake.dy = -grid;
+    snake.dx = 0;
+  }
+  else if (e.which === 39 && snake.dx === 0) {
+    snake.dx = grid;
+    snake.dy = 0;
+  }
+  else if (e.which === 40 && snake.dy === 0) {
+    snake.dy = grid;
+    snake.dx = 0;
+  }
+});
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>
